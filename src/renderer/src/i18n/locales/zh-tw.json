@@ -169,6 +169,8 @@
       "topics.export.obsidian_select_folder.btn": "確定",
       "topics.export.obsidian_export_success": "匯出成功",
       "topics.export.obsidian_export_failed": "匯出失敗",
+      "topics.export.obsidian_show_md_files": "顯示md文件",
+      "topics.export.obsidian_selected_path": "已選擇路徑",
       "topics.list": "話題列表",
       "topics.move_to": "移動到",
       "topics.pinned": "固定話題",
@@ -761,7 +763,7 @@
           },
           "help": "先安裝 Obsidian 插件 Local REST API，然後獲取 Obsidian API Key",
           "url": "Obsidian 知識庫 URL",
-          "url_placeholder": "http://127.0.0.1:27123",
+          "url_placeholder": "http://127.0.0.1:27123/",
           "title": "Obsidian 設定",
           "api_key": "Obsidian API Key",
           "api_key_placeholder": "請輸入 Obsidian API Key"

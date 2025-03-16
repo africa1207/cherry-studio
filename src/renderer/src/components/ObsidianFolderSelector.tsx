@@ -1,69 +1,57 @@
-import { FolderOutlined } from '@ant-design/icons'
-import { Spin, Tree } from 'antd'
+import { FileOutlined, FolderOutlined } from '@ant-design/icons'
+import { Spin, Switch, Tree } from 'antd'
 import { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
 interface Props {
   defaultPath: string
-  initialFiles: string[]
   obsidianUrl: string
   obsidianApiKey: string
-  onPathChange: (path: string) => void
+  onPathChange: (path: string, isMdFile: boolean) => void
 }
 
 interface TreeNode {
   title: string
   key: string
   isLeaf: boolean
+  isMdFile?: boolean
   children?: TreeNode[]
 }
 
-const ObsidianFolderSelector: FC<Props> = ({
-  defaultPath,
-  initialFiles,
-  obsidianUrl,
-  obsidianApiKey,
-  onPathChange
-}) => {
+const ObsidianFolderSelector: FC<Props> = ({ defaultPath, obsidianUrl, obsidianApiKey, onPathChange }) => {
   const { t } = useTranslation()
   const [treeData, setTreeData] = useState<TreeNode[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([])
+  const [expandedKeys, setExpandedKeys] = useState<string[]>(['/'])
+  const [showMdFiles, setShowMdFiles] = useState<boolean>(false)
+  // 当前选中的节点信息
+  const [currentSelection, setCurrentSelection] = useState({
+    path: defaultPath,
+    isMdFile: false
+  })
+  // 使用key强制Tree组件重新渲染
+  const [treeKey, setTreeKey] = useState<number>(0)
 
-  // 初始化根目录
+  // 只初始化根节点，不立即加载内容
   useEffect(() => {
-    const rootNodes: TreeNode[] = [
-      {
-        title: '/',
-        key: '/',
-        isLeaf: false,
-        children: initialFiles
-          .filter((file) => file.endsWith('/')) // 只保留目录
-          .map((dir) => {
-            const normalizedDir = dir.replace('/', '')
-            return {
-              title: normalizedDir,
-              key: `/${normalizedDir}/`, // 确保路径末尾有斜杠
-              isLeaf: false
-            }
-          })
-      }
-    ]
-    setTreeData(rootNodes)
+    initializeRootNode()
+  }, [showMdFiles])
 
-    // 设置根节点为展开状态
-    setExpandedKeys(['/'])
-
-    // 直接调用 loadData 加载根节点的子节点
-    if (rootNodes[0]) {
-      loadData(rootNodes[0])
+  // 初始化根节点，但不自动加载子节点
+  const initializeRootNode = () => {
+    const rootNode: TreeNode = {
+      title: '/',
+      key: '/',
+      isLeaf: false
     }
-  }, [initialFiles])
+
+    setTreeData([rootNode])
+  }
 
   // 异步加载子节点
   const loadData = async (node: any) => {
-    if (node.children && node.children.length > 0) return
+    if (node.isLeaf) return // 如果是叶子节点（md文件），不加载子节点
 
     setLoading(true)
     try {
@@ -71,7 +59,7 @@ const ObsidianFolderSelector: FC<Props> = ({
       const path = node.key === '/' ? '' : node.key
       const requestPath = path.endsWith('/') ? path : `${path}/`
 
-      const response = await fetch(`${obsidianUrl}/vault${requestPath}`, {
+      const response = await fetch(`${obsidianUrl}vault${requestPath}`, {
         headers: {
           Authorization: `Bearer ${obsidianApiKey}`
         }
@@ -83,18 +71,20 @@ const ObsidianFolderSelector: FC<Props> = ({
       }
 
       const childNodes: TreeNode[] = (data.files || [])
-        .filter((file: string) => file.endsWith('/')) // 只保留目录
-        .map((dir: string) => {
+        .filter((file: string) => file.endsWith('/') || (showMdFiles && file.endsWith('.md'))) // 根据开关状态决定是否显示md文件
+        .map((file: string) => {
           // 修复路径问题，避免重复的斜杠
-          const normalizedDir = dir.replace('/', '')
+          const normalizedFile = file.replace('/', '')
+          const isMdFile = file.endsWith('.md')
           const childPath = requestPath.endsWith('/')
-            ? `${requestPath}${normalizedDir}/`
-            : `${requestPath}/${normalizedDir}/`
+            ? `${requestPath}${normalizedFile}${isMdFile ? '' : '/'}`
+            : `${requestPath}/${normalizedFile}${isMdFile ? '' : '/'}`
 
           return {
-            title: normalizedDir,
+            title: normalizedFile,
             key: childPath,
-            isLeaf: false
+            isLeaf: isMdFile,
+            isMdFile
           }
         })
 
@@ -126,26 +116,79 @@ const ObsidianFolderSelector: FC<Props> = ({
     }
   }
 
+  // 处理开关切换
+  const handleSwitchChange = (checked: boolean) => {
+    setShowMdFiles(checked)
+    // 重置选择
+    setCurrentSelection({
+      path: defaultPath,
+      isMdFile: false
+    })
+    onPathChange(defaultPath, false)
+
+    // 重置Tree状态并强制重新渲染
+    setTreeData([])
+    setExpandedKeys(['/'])
+
+    // 递增key值以强制Tree组件完全重新渲染
+    setTreeKey((prev) => prev + 1)
+
+    // 延迟初始化根节点，让状态完全清除
+    setTimeout(() => {
+      initializeRootNode()
+    }, 50)
+  }
+
+  // 自定义图标，为md文件和文件夹显示不同的图标
+  const renderIcon = (props: any) => {
+    const { data } = props
+    if (data.isMdFile) {
+      return <FileOutlined />
+    }
+    return <FolderOutlined />
+  }
+
   return (
     <Container>
+      <SwitchContainer>
+        <span>{t('chat.topics.export.obsidian_show_md_files')}</span>
+        <Switch checked={showMdFiles} onChange={handleSwitchChange} />
+      </SwitchContainer>
       <Spin spinning={loading}>
         <TreeContainer>
           <Tree
+            key={treeKey} // 使用key来强制重新渲染
             defaultSelectedKeys={[defaultPath]}
             expandedKeys={expandedKeys}
             onExpand={(keys) => setExpandedKeys(keys as string[])}
             treeData={treeData}
             loadData={loadData}
-            onSelect={(selectedKeys) => {
+            onSelect={(selectedKeys, info) => {
               if (selectedKeys.length > 0) {
                 const path = selectedKeys[0] as string
-                onPathChange?.(path)
+                const isMdFile = !!(info.node as any).isMdFile
+
+                setCurrentSelection({
+                  path,
+                  isMdFile
+                })
+
+                onPathChange?.(path, isMdFile)
               }
             }}
-            icon={<FolderOutlined />}
+            showLine
+            showIcon
+            icon={renderIcon}
           />
         </TreeContainer>
       </Spin>
+      <div>
+        {currentSelection.path !== defaultPath && (
+          <SelectedPath>
+            {t('chat.topics.export.obsidian_selected_path')}: {currentSelection.path}
+          </SelectedPath>
+        )}
+      </div>
     </Container>
   )
 }
@@ -163,7 +206,23 @@ const TreeContainer = styled.div`
   border-radius: 4px;
   padding: 10px;
   margin-bottom: 10px;
-  height: 350px;
+  height: 320px;
+`
+
+const SwitchContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0 10px;
+`
+
+const SelectedPath = styled.div`
+  font-size: 12px;
+  color: var(--color-text-2);
+  margin-top: 5px;
+  padding: 0 10px;
+  word-break: break-all;
 `
 
 export default ObsidianFolderSelector

@@ -169,6 +169,8 @@
       "topics.export.obsidian_select_folder.btn": "Confirm",
       "topics.export.obsidian_export_success": "Export success",
       "topics.export.obsidian_export_failed": "Export failed",
+      "topics.export.obsidian_show_md_files": "Show MD Files",
+      "topics.export.obsidian_selected_path": "Selected Path",
       "topics.list": "Topic List",
       "topics.move_to": "Move to",
       "topics.pinned": "Pinned Topics",
@@ -761,7 +763,7 @@
           },
           "help": "Install the Obsidian plugin Local REST API first, then get the Obsidian API Key",
           "url": "Obsidian Knowledge Base URL",
-          "url_placeholder": "http://127.0.0.1:27123",
+          "url_placeholder": "http://127.0.0.1:27123/",
           "title": "Obsidian Configuration",
           "api_key": "Obsidian API Key",
           "api_key_placeholder": "Please enter the Obsidian API Key"

@@ -169,6 +169,8 @@
       "topics.export.obsidian_select_folder.btn": "Определить",
       "topics.export.obsidian_export_success": "Экспорт успешно завершен",
       "topics.export.obsidian_export_failed": "Экспорт не удалось",
+      "topics.export.obsidian_show_md_files": "Показать файлы MD",
+      "topics.export.obsidian_selected_path": "Выбранный путь",
       "topics.list": "Список топиков",
       "topics.move_to": "Переместить в",
       "topics.pinned": "Закрепленные темы",
@@ -761,7 +763,7 @@
           },
           "help": "Сначала установите плагин Local REST API Obsidian, затем получите API Key Obsidian",
           "url": "URL базы знаний Obsidian",
-          "url_placeholder": "http://127.0.0.1:27123",
+          "url_placeholder": "http://127.0.0.1:27123/",
           "title": "Настройка Obsidian",
           "api_key": "API Key Obsidian",
           "api_key_placeholder": "Введите API Key Obsidian"

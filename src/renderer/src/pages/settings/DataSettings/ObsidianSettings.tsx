@@ -28,6 +28,15 @@ const ObsidianSettings: FC = () => {
     dispatch(setObsidianUrl(e.target.value))
   }
 
+  const handleObsidianUrlBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    let url = e.target.value
+    // 确保URL以/结尾，但只在失去焦点时执行
+    if (url && !url.endsWith('/')) {
+      url = `${url}/`
+      dispatch(setObsidianUrl(url))
+    }
+  }
+
   const handleObsidianConnectionCheck = async () => {
     try {
       if (!obsidianApiKey) {
@@ -39,7 +48,7 @@ const ObsidianSettings: FC = () => {
         return
       }
 
-      const response = await fetch(`${obsidianUrl}/`, {
+      const response = await fetch(`${obsidianUrl}`, {
         headers: {
           Authorization: `Bearer ${obsidianApiKey}`
         }
@@ -77,6 +86,7 @@ const ObsidianSettings: FC = () => {
             type="text"
             value={obsidianUrl || ''}
             onChange={handleObsidianUrlChange}
+            onBlur={handleObsidianUrlBlur}
             style={{ width: 315 }}
             placeholder={t('settings.data.obsidian.url_placeholder')}
           />
