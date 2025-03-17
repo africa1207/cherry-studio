@@ -1,7 +1,6 @@
 import {
   ClearOutlined,
   ColumnHeightOutlined,
-  FormOutlined,
   FullscreenExitOutlined,
   FullscreenOutlined,
   GlobalOutlined,
@@ -71,13 +70,11 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
     pasteLongTextAsFile,
     pasteLongTextThreshold,
     showInputEstimatedTokens,
-    clickAssistantToShowTopic,
     autoTranslateWithSpace
   } = useSettings()
   const [expended, setExpend] = useState(false)
   const [estimateTokenCount, setEstimateTokenCount] = useState(0)
   const [contextCount, setContextCount] = useState({ current: 0, max: 0 })
-  // const generating = useAppSelector((state) => state.runtime.generating)
   const textareaRef = useRef<TextAreaRef>(null)
   const [files, setFiles] = useState<FileType[]>(_files)
   const { t } = useTranslation()
@@ -109,6 +106,7 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
 
   const [mentionFromKeyboard, setMentionFromKeyboard] = useState(false)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedEstimate = useCallback(
     debounce((newText) => {
       if (showInputEstimatedTokens) {
@@ -125,7 +123,6 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
 
   const inputTokenCount = showInputEstimatedTokens ? tokenCount : 0
 
-  const newTopicShortcut = useShortcutDisplay('new_topic')
   const cleanTopicShortcut = useShortcutDisplay('clear_topic')
   const inputEmpty = isEmpty(text.trim()) && files.length === 0
 
@@ -148,6 +145,8 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
     if (inputEmpty || loading) {
       return
     }
+
+    EventEmitter.emit(EVENT_NAMES.SEND_MESSAGE)
 
     try {
       // Dispatch the sendMessage action with all options
@@ -323,8 +322,8 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
     addTopic(topic)
     setActiveTopic(topic)
 
-    clickAssistantToShowTopic && setTimeout(() => EventEmitter.emit(EVENT_NAMES.SHOW_TOPIC_SIDEBAR), 0)
-  }, [addTopic, assistant, clickAssistantToShowTopic, setActiveTopic, setModel])
+    setTimeout(() => EventEmitter.emit(EVENT_NAMES.SHOW_TOPIC_SIDEBAR), 0)
+  }, [addTopic, assistant, setActiveTopic, setModel])
 
   const onPause = async () => {
     await pauseMessages()
@@ -438,7 +437,7 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
         }
       }
     },
-    [pasteLongTextAsFile, pasteLongTextThreshold, supportExts, t, text]
+    [model, pasteLongTextAsFile, pasteLongTextThreshold, resizeTextArea, supportExts, t, text]
   )
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -548,7 +547,7 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
       })
     ]
     return () => unsubscribes.forEach((unsub) => unsub())
-  }, [addNewTopic])
+  }, [addNewTopic, resizeTextArea])
 
   useEffect(() => {
     textareaRef.current?.focus()
@@ -556,6 +555,7 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
 
   useEffect(() => {
     setTimeout(() => resizeTextArea(), 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -707,11 +707,6 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
           </DragHandle>
           <Toolbar>
             <ToolbarMenu>
-              <Tooltip placement="top" title={t('chat.input.new_topic', { Command: newTopicShortcut })} arrow>
-                <ToolbarButton type="text" onClick={addNewTopic}>
-                  <FormOutlined />
-                </ToolbarButton>
-              </Tooltip>
               <MentionModelsButton
                 mentionModels={mentionModels}
                 onMentionModel={(model) => onMentionModel(model, mentionFromKeyboard)}
@@ -739,7 +734,7 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
                   ToolbarButton={ToolbarButton}
                 />
               )}
-              <AttachmentButton model={model} files={files} setFiles={setFiles} ToolbarButton={ToolbarButton} />
+              <TranslateButton text={text} onTranslated={onTranslated} isLoading={isTranslating} />
               <Tooltip placement="top" title={t('chat.input.clear', { Command: cleanTopicShortcut })} arrow>
                 <Popconfirm
                   title={t('chat.input.clear.content')}
@@ -775,7 +770,7 @@ const Inputbar: FC<Props> = ({ assistant: _assistant, setActiveTopic, topic }) =
               />
             </ToolbarMenu>
             <ToolbarMenu>
-              <TranslateButton text={text} onTranslated={onTranslated} isLoading={isTranslating} />
+              <AttachmentButton model={model} files={files} setFiles={setFiles} ToolbarButton={ToolbarButton} />
               {loading && (
                 <Tooltip placement="top" title={t('chat.input.pause')} arrow>
                   <ToolbarButton type="text" onClick={onPause} style={{ marginRight: -2, marginTop: 1 }}>

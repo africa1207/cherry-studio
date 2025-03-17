@@ -179,6 +179,7 @@
       "topics.prompt.tips": "話題提示詞：針對目前話題提供額外的補充提示詞",
       "topics.title": "話題",
       "topics.unpinned": "取消固定",
+      "topics.new": "開始新對話",
       "translate": "翻譯",
       "navigation": {
         "prev": "上一條訊息",
@@ -257,7 +258,8 @@
       "render": {
         "description": "渲染公式失敗，請檢查公式格式是否正確",
         "title": "渲染錯誤"
-      }
+      },
+      "user_message_not_found": "無法找到原始用戶訊息"
     },
     "export": {
       "assistant": "助手",
@@ -407,8 +409,9 @@
       "backup.success": "備份成功",
       "chat.completion.paused": "聊天完成已暫停",
       "citations": "參考文獻",
-      "copied": "已複製",
-      "copy.success": "複製成功",
+      "copied": "已複製！",
+      "copy.success": "已複製！",
+      "copy.failed": "複製失敗",
       "error.chunk_overlap_too_large": "分段重疊不能大於分段大小",
       "error.dimension_too_large": "內容尺寸過大",
       "error.enter.api.host": "請先輸入您的 API 主機地址",

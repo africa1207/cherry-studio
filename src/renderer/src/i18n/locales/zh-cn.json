@@ -179,6 +179,7 @@
       "topics.prompt.tips": "话题提示词: 针对当前话题提供额外的补充提示词",
       "topics.title": "话题",
       "topics.unpinned": "取消固定",
+      "topics.new": "开始新对话",
       "translate": "翻译",
       "navigation": {
         "prev": "上一条消息",
@@ -257,7 +258,8 @@
       "render": {
         "description": "渲染公式失败，请检查公式格式是否正确",
         "title": "渲染错误"
-      }
+      },
+      "user_message_not_found": "无法找到原始用户消息"
     },
     "export": {
       "assistant": "助手",
@@ -409,6 +411,7 @@
       "citations": "引用内容",
       "copied": "已复制",
       "copy.success": "复制成功",
+      "copy.failed": "复制失败",
       "error.chunk_overlap_too_large": "分段重叠不能大于分段大小",
       "error.dimension_too_large": "内容尺寸过大",
       "error.enter.api.host": "请输入您的 API 地址",
