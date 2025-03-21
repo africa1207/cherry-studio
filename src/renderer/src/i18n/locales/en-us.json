@@ -186,7 +186,17 @@
         "prev": "Previous Message",
         "next": "Next Message",
         "first": "Already at the first message",
-        "last": "Already at the last message"
+        "last": "Already at the last message",
+        "history": "Chat History"
+      },
+      "history": {
+        "title": "Chat History",
+        "coming_soon": "Chat workflow diagram coming soon",
+        "flow_title": "Chat Flow Diagram",
+        "user_node": "User",
+        "assistant_node": "Assistant",
+        "view_full_content": "View Full Content",
+        "click_to_navigate": "Click to navigate to the message"
       }
     },
     "code_block": {
