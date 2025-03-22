@@ -11,7 +11,8 @@ import { Model } from '@renderer/types'
 import { Controls, Handle, MiniMap, ReactFlow, ReactFlowProvider } from '@xyflow/react'
 import { Edge, Node, NodeTypes, Position, useEdgesState, useNodesState } from '@xyflow/react'
 import { Avatar, Spin, Tooltip } from 'antd'
-import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { isEqual } from 'lodash'
+import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -90,8 +91,7 @@ const CustomNode: FC<{ data: any }> = ({ data }) => {
   // 处理节点点击事件，滚动到对应消息
   const handleNodeClick = () => {
     if (data.messageId) {
-      // 创建一个自定义事件来定位消息并切换标签（如果需要）
-      // 这个自定义事件将携带模型ID等信息，以便在标签模式下正确切换标签
+      // 创建一个自定义事件来定位消息并切换标签
       const customEvent = new CustomEvent('flow-navigate-to-message', {
         detail: {
           messageId: data.messageId,
@@ -102,14 +102,12 @@ const CustomNode: FC<{ data: any }> = ({ data }) => {
         bubbles: true
       })
 
-      // 将事件分发到文档，让可能的监听器处理标签切换
+      // 让监听器处理标签切换
       document.dispatchEvent(customEvent)
 
-      // 短暂延迟后再尝试定位消息，给标签切换留出时间
       setTimeout(() => {
-        // 使用事件机制定位消息，这是应用内已有的消息定位实现方式
         EventEmitter.emit(EVENT_NAMES.LOCATE_MESSAGE + ':' + data.messageId)
-      }, 150)
+      }, 250)
     }
   }
 
@@ -194,7 +192,29 @@ const ChatFlowHistory: FC<ChatFlowHistoryProps> = ({ conversationId }) => {
   const { userName } = useSettings()
 
   const topicId = conversationId
-  const messages = useSelector((state: RootState) => selectTopicMessages(state, topicId || ''))
+
+  // 只在消息实际内容变化时更新，而不是属性变化（如foldSelected）
+  const messages = useSelector(
+    (state: RootState) => selectTopicMessages(state, topicId || ''),
+    (prev, next) => {
+      // 只比较消息的关键属性，忽略展示相关的属性（如foldSelected）
+      if (prev.length !== next.length) return false
+
+      // 比较每条消息的内容和关键属性，忽略UI状态相关属性
+      return prev.every((prevMsg, index) => {
+        const nextMsg = next[index]
+        return (
+          prevMsg.id === nextMsg.id &&
+          prevMsg.content === nextMsg.content &&
+          prevMsg.role === nextMsg.role &&
+          prevMsg.createdAt === nextMsg.createdAt &&
+          prevMsg.askId === nextMsg.askId &&
+          isEqual(prevMsg.model, nextMsg.model)
+        )
+      })
+    }
+  )
+
   // 获取用户头像
   const userAvatar = useSelector((state: RootState) => state.runtime.avatar)
 
@@ -588,4 +608,7 @@ const NodeContent = styled.div`
   padding: 3px;
 `
 
-export default ChatFlowHistory
+// 确保组件使用React.memo包装以减少不必要的重渲染
+export default memo(ChatFlowHistory, (prevProps, nextProps) => {
+  return prevProps.conversationId === nextProps.conversationId
+})
