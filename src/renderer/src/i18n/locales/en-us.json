@@ -218,7 +218,7 @@
         "assistant_node": "Assistant",
         "view_full_content": "View Full Content",
         "click_to_navigate": "Click to navigate to the message"
-      }
+      },
       "translate": "Translate"
     },
     "code_block": {
