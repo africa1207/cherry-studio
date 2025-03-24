@@ -50,8 +50,7 @@ class ObsidianVaultService {
         return []
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return Object.entries(config.vaults).map(([id, vault]: [string, any]) => ({
+      return Object.entries(config.vaults).map(([, vault]: [string, any]) => ({
         path: vault.path,
         name: vault.name || path.basename(vault.path)
       }))
