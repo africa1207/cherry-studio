@@ -1,4 +1,5 @@
 import i18n from '@renderer/i18n'
+import store from '@renderer/store'
 import { exportMarkdownToObsidian } from '@renderer/utils/export'
 import { Alert, Empty, Form, Input, Modal, Select, Spin, TreeSelect } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -24,9 +25,8 @@ interface FileInfo {
 const convertToTreeData = (files: FileInfo[]) => {
   const treeData: any[] = [
     {
-      title: '根目录',
+      title: i18n.t('chat.topics.export.obsidian_root_directory'),
       value: '',
-      key: 'root',
       isLeaf: false,
       selectable: true
     }
@@ -98,7 +98,6 @@ const convertToTreeData = (files: FileInfo[]) => {
     const fileNode = {
       title: fileName,
       value: fullPath,
-      key: fullPath,
       isLeaf: true,
       selectable: true,
       icon: <span style={{ marginRight: 4 }}>📄</span>
@@ -117,13 +116,14 @@ const convertToTreeData = (files: FileInfo[]) => {
 const ObsidianExportDialog: React.FC<ObsidianExportDialogProps> = ({
   title,
   markdown,
-  obsidianTags,
-  processingMethod,
   open,
-  onClose
+  onClose,
+  obsidianTags,
+  processingMethod
 }) => {
+  const defaultObsidianVault = store.getState().settings.defaultObsidianVault
   const [state, setState] = useState({
-    title: title,
+    title,
     tags: obsidianTags || '',
     createdAt: new Date().toISOString().split('T')[0],
     source: 'Cherry Studio',
@@ -146,9 +146,8 @@ const ObsidianExportDialog: React.FC<ObsidianExportDialogProps> = ({
     } else {
       setFileTreeData([
         {
-          title: '根目录',
+          title: i18n.t('chat.topics.export.obsidian_root_directory'),
           value: '',
-          key: 'root',
           isLeaf: false,
           selectable: true
         }
@@ -172,12 +171,13 @@ const ObsidianExportDialog: React.FC<ObsidianExportDialogProps> = ({
 
         setVaults(vaultsData)
 
-        // 如果没有选择的vault，默认选择第一个
-        if (!selectedVault && vaultsData.length > 0) {
-          setSelectedVault(vaultsData[0].name)
+        // 如果没有选择的vault，使用默认值或第一个
+        const vaultToUse = defaultObsidianVault || vaultsData[0]?.name
+        if (vaultToUse) {
+          setSelectedVault(vaultToUse)
 
-          // 获取第一个vault的文件和文件夹
-          const filesData = await window.obsidian.getFiles(vaultsData[0].name)
+          // 获取选中vault的文件和文件夹
+          const filesData = await window.obsidian.getFiles(vaultToUse)
           setFiles(filesData)
         }
       } catch (error) {
@@ -189,7 +189,7 @@ const ObsidianExportDialog: React.FC<ObsidianExportDialogProps> = ({
     }
 
     fetchVaults()
-  }, [])
+  }, [defaultObsidianVault])
 
   // 当选择的vault变化时，获取其文件和文件夹
   useEffect(() => {
@@ -272,12 +272,18 @@ const ObsidianExportDialog: React.FC<ObsidianExportDialogProps> = ({
     // 检查是否选中md文件
     if (value) {
       const selectedFile = files.find((file) => file.path === value)
-      if (selectedFile && selectedFile.type === 'markdown') {
-        // 如果是md文件，自动设置标题为文件名(不含.md扩展名)
-        const fileName = selectedFile.name
-        const titleWithoutExt = fileName.endsWith('.md') ? fileName.substring(0, fileName.length - 3) : fileName
-
-        handleChange('title', titleWithoutExt)
+      if (selectedFile) {
+        if (selectedFile.type === 'markdown') {
+          // 如果是md文件，自动设置标题为文件名并设置处理方式为1(追加)
+          const fileName = selectedFile.name
+          const titleWithoutExt = fileName.endsWith('.md') ? fileName.substring(0, fileName.length - 3) : fileName
+          handleChange('title', titleWithoutExt)
+          handleChange('processingMethod', '1')
+        } else {
+          // 如果是文件夹，自动设置标题为话题名并设置处理方式为3(新建)
+          handleChange('processingMethod', '3')
+          handleChange('title', title)
+        }
       }
     }
   }

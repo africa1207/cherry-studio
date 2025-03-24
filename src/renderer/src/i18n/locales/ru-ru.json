@@ -202,6 +202,13 @@
       "topics.export.obsidian_title": "Заголовок",
       "topics.export.obsidian_title_placeholder": "Пожалуйста, введите заголовок",
       "topics.export.obsidian_title_required": "Заголовок не может быть пустым",
+      "topics.export.obsidian_no_vaults": "Хранилища Obsidian не найдены",
+      "topics.export.obsidian_loading": "Загрузка...",
+      "topics.export.obsidian_fetch_error": "Не удалось получить хранилища Obsidian",
+      "topics.export.obsidian_fetch_folders_error": "Не удалось получить структуру папок",
+      "topics.export.obsidian_no_vault_selected": "Пожалуйста, сначала выберите хранилище",
+      "topics.export.obsidian_select_vault_first": "Пожалуйста, сначала выберите хранилище",
+      "topics.export.obsidian_root_directory": "Корневая директория",
       "topics.export.title": "Экспорт",
       "topics.export.word": "Экспорт как Word",
       "topics.export.yuque": "Экспорт в Yuque",
@@ -833,6 +840,15 @@
           "title": "Настройка Yuque",
           "token": "Токен Yuque",
           "token_placeholder": "Введите токен Yuque"
+        },
+        "obsidian": {
+          "title": "Настройки Obsidian",
+          "default_vault": "Хранилище Obsidian по умолчанию",
+          "default_vault_placeholder": "Выберите хранилище Obsidian по умолчанию",
+          "default_vault_loading": "Получение хранилищ Obsidian...",
+          "default_vault_no_vaults": "Хранилища Obsidian не найдены",
+          "default_vault_fetch_error": "Не удалось получить хранилища Obsidian",
+          "default_vault_export_failed": "Ошибка экспорта"
         }
       },
       "display.assistant.title": "Настройки ассистентов",

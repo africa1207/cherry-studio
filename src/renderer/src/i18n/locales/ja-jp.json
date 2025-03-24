@@ -202,6 +202,13 @@
       "topics.export.obsidian_title": "タイトル",
       "topics.export.obsidian_title_placeholder": "タイトルを入力してください",
       "topics.export.obsidian_title_required": "タイトルは空白にできません",
+      "topics.export.obsidian_no_vaults": "Obsidianの保管庫が見つかりません",
+      "topics.export.obsidian_loading": "読み込み中...",
+      "topics.export.obsidian_fetch_error": "Obsidianの保管庫の取得に失敗しました",
+      "topics.export.obsidian_fetch_folders_error": "フォルダ構造の取得に失敗しました",
+      "topics.export.obsidian_no_vault_selected": "保管庫を選択してください",
+      "topics.export.obsidian_select_vault_first": "最初に保管庫を選択してください",
+      "topics.export.obsidian_root_directory": "ルートディレクトリ",
       "topics.export.title": "エクスポート",
       "topics.export.word": "Wordとしてエクスポート",
       "topics.export.yuque": "語雀にエクスポート",
@@ -833,6 +840,15 @@
           "title": "Yuque設定",
           "token": "Yuqueトークン",
           "token_placeholder": "Yuqueトークンを入力してください"
+        },
+        "obsidian": {
+          "title": "Obsidian 設定",
+          "default_vault": "デフォルトの Obsidian 保管庫",
+          "default_vault_placeholder": "デフォルトの Obsidian 保管庫を選択してください",
+          "default_vault_loading": "Obsidian 保管庫を取得中...",
+          "default_vault_no_vaults": "Obsidian 保管庫が見つかりません",
+          "default_vault_fetch_error": "Obsidian 保管庫の取得に失敗しました",
+          "default_vault_export_failed": "エクスポートに失敗しました"
         }
       },
       "display.assistant.title": "アシスタント設定",

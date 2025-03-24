@@ -88,6 +88,7 @@ export interface SettingsState {
   yuqueRepoId: string | null
   joplinToken: string | null
   joplinUrl: string | null
+  defaultObsidianVault: string | null
 }
 
 export type MultiModelMessageStyle = 'horizontal' | 'vertical' | 'fold' | 'grid'
@@ -160,7 +161,8 @@ const initialState: SettingsState = {
   yuqueUrl: '',
   yuqueRepoId: '',
   joplinToken: '',
-  joplinUrl: ''
+  joplinUrl: '',
+  defaultObsidianVault: null
 }
 
 const settingsSlice = createSlice({
@@ -373,6 +375,9 @@ const settingsSlice = createSlice({
     },
     setMessageNavigation: (state, action: PayloadAction<'none' | 'buttons' | 'anchor'>) => {
       state.messageNavigation = action.payload
+    },
+    setDefaultObsidianVault: (state, action: PayloadAction<string>) => {
+      state.defaultObsidianVault = action.payload
     }
   }
 })
@@ -444,7 +449,8 @@ export const {
   setYuqueUrl,
   setJoplinToken,
   setJoplinUrl,
-  setMessageNavigation
+  setMessageNavigation,
+  setDefaultObsidianVault
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

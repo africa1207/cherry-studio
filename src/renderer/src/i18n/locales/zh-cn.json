@@ -208,6 +208,7 @@
       "topics.export.obsidian_fetch_folders_error": "获取文件夹结构失败",
       "topics.export.obsidian_no_vault_selected": "请先选择一个保管库",
       "topics.export.obsidian_select_vault_first": "请先选择保管库",
+      "topics.export.obsidian_root_directory": "根目录",
       "topics.export.title": "导出",
       "topics.export.word": "导出为 Word",
       "topics.export.yuque": "导出到语雀",
@@ -839,6 +840,15 @@
           "title": "语雀配置",
           "token": "语雀 Token",
           "token_placeholder": "请输入语雀Token"
+        },
+        "obsidian": {
+          "title": "Obsidian 配置",
+          "default_vault": "默认 Obsidian 仓库",
+          "default_vault_placeholder": "请选择默认 Obsidian 仓库",
+          "default_vault_loading": "正在获取 Obsidian 仓库...",
+          "default_vault_no_vaults": "未找到 Obsidian 仓库",
+          "default_vault_fetch_error": "获取 Obsidian 仓库失败",
+          "default_vault_export_failed": "导出失败"
         }
       },
       "display.assistant.title": "助手设置",

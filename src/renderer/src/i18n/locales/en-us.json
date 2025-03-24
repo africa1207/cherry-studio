@@ -202,6 +202,13 @@
       "topics.export.obsidian_title": "Title",
       "topics.export.obsidian_title_placeholder": "Please enter the title",
       "topics.export.obsidian_title_required": "The title cannot be empty",
+      "topics.export.obsidian_no_vaults": "No Obsidian vaults found",
+      "topics.export.obsidian_loading": "Loading...",
+      "topics.export.obsidian_fetch_error": "Failed to fetch Obsidian vaults",
+      "topics.export.obsidian_fetch_folders_error": "Failed to fetch folder structure",
+      "topics.export.obsidian_no_vault_selected": "Please select a vault first",
+      "topics.export.obsidian_select_vault_first": "Please select a vault first",
+      "topics.export.obsidian_root_directory": "Root Directory",
       "topics.export.title": "Export",
       "topics.export.word": "Export as Word",
       "topics.export.yuque": "Export to Yuque",
@@ -833,6 +840,15 @@
           "title": "Yuque Configuration",
           "token": "Yuque Token",
           "token_placeholder": "Please enter the Yuque Token"
+        },
+        "obsidian": {
+          "title": "Obsidian Configuration",
+          "default_vault": "Default Obsidian Vault",
+          "default_vault_placeholder": "Please select the default Obsidian vault",
+          "default_vault_loading": "Loading Obsidian vault...",
+          "default_vault_no_vaults": "No Obsidian vaults found",
+          "default_vault_fetch_error": "Failed to fetch Obsidian vault",
+          "default_vault_export_failed": "Export failed"
         }
       },
       "display.assistant.title": "Assistant Settings",
