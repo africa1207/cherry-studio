@@ -25,7 +25,6 @@ import { SettingContainer, SettingDivider, SettingGroup, SettingRow, SettingRowT
 import JoplinSettings from './JoplinSettings'
 import MarkdownExportSettings from './MarkdownExportSettings'
 import NotionSettings from './NotionSettings'
-import ObsidianSettings from './ObsidianSettings'
 import WebDavSettings from './WebDavSettings'
 import YuqueSettings from './YuqueSettings'
 
@@ -34,7 +33,7 @@ const DataSettings: FC = () => {
   const [appInfo, setAppInfo] = useState<AppInfo>()
   const { size, removeAllFiles } = useKnowledgeFiles()
   const { theme } = useTheme()
-  const [menu, setMenu] = useState<string>('data')
+  const [menu, setMenu] = useState<string>('common')
 
   //joplin icon needs to be updated into iconfont
   const JoplinIcon = () => (
@@ -56,11 +55,6 @@ const DataSettings: FC = () => {
       key: 'yuque',
       title: 'settings.data.yuque.title',
       icon: <YuqueOutlined style={{ fontSize: 16 }} />
-    },
-    {
-      key: 'obsidian',
-      title: 'settings.data.obsidian.title',
-      icon: <i className="iconfont icon-obsidian" />
     },
     {
       key: 'joplin',
@@ -204,7 +198,6 @@ const DataSettings: FC = () => {
         {menu === 'markdown_export' && <MarkdownExportSettings />}
         {menu === 'notion' && <NotionSettings />}
         {menu === 'yuque' && <YuqueSettings />}
-        {menu === 'obsidian' && <ObsidianSettings />}
         {menu === 'joplin' && <JoplinSettings />}
       </SettingContainer>
     </Container>
