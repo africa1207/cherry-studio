@@ -480,8 +480,7 @@ export const {
   setSiyuanApiUrl,
   setSiyuanToken,
   setSiyuanBoxId,
-  setSiyuanRootPath,
-  setMessageNavigation
+  setSiyuanRootPath
 } = settingsSlice.actions
 
 export default settingsSlice.reducer

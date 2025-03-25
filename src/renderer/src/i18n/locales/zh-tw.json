@@ -859,7 +859,7 @@
           "default_vault_no_vaults": "未找到 Obsidian 倉庫",
           "default_vault_fetch_error": "獲取 Obsidian 倉庫失敗",
           "default_vault_export_failed": "匯出失敗"
-        }
+        },
         "siyuan": {
           "title": "思源筆記配置",
           "api_url": "API地址",
