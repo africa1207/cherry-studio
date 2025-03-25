@@ -18,6 +18,7 @@ import { GeminiService } from './services/GeminiService'
 import KnowledgeService from './services/KnowledgeService'
 import MCPService from './services/MCPService'
 import ObsidianVaultService from './services/ObsidianVaultService'
+import * as NutstoreService from './services/NutstoreService'
 import { ProxyConfig, proxyManager } from './services/ProxyManager'
 import { registerShortcuts, unregisterAllShortcuts } from './services/ShortcutService'
 import { TrayService } from './services/TrayService'
@@ -166,6 +167,8 @@ export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
   ipcMain.handle('backup:backupToWebdav', backupManager.backupToWebdav)
   ipcMain.handle('backup:restoreFromWebdav', backupManager.restoreFromWebdav)
   ipcMain.handle('backup:listWebdavFiles', backupManager.listWebdavFiles)
+  ipcMain.handle('backup:checkConnection', backupManager.checkConnection)
+  ipcMain.handle('backup:createDirectory', backupManager.createDirectory)
 
   // file
   ipcMain.handle('file:open', fileManager.open)
@@ -307,4 +310,11 @@ export function registerIpc(mainWindow: BrowserWindow, app: Electron.App) {
   ipcMain.handle('obsidian:get-files', (_event, vaultName) => {
     return obsidianVaultService.getFilesByVaultName(vaultName)
   })
+
+  // nutstore
+  ipcMain.handle('nutstore:get-sso-url', NutstoreService.getNutstoreSSOUrl)
+  ipcMain.handle('nutstore:decrypt-token', (_, token: string) => NutstoreService.decryptToken(token))
+  ipcMain.handle('nutstore:get-directory-contents', (_, token: string, path: string) =>
+    NutstoreService.getDirectoryContents(token, path)
+  )
 }
