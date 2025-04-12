@@ -1,7 +1,7 @@
-import { DeleteOutlined, ExclamationCircleOutlined, ImportOutlined, ReloadOutlined } from '@ant-design/icons'
+import { DeleteOutlined, ExclamationCircleOutlined, ReloadOutlined } from '@ant-design/icons'
 import { restoreFromWebdav } from '@renderer/services/BackupService'
 import { formatFileSize } from '@renderer/utils'
-import { Button, message, Modal, Space, Table, Tooltip } from 'antd'
+import { Button, message, Modal, Table, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -221,23 +221,18 @@ export function WebdavBackupManager({ visible, onClose, webdavConfig }: WebdavBa
       key: 'action',
       width: 160,
       render: (_: any, record: BackupFile) => (
-        <Space size="middle">
+        <>
+          <Button type="link" onClick={() => handleRestore(record.fileName)} disabled={restoring || deleting}>
+            {t('settings.data.webdav.backup.manager.restore.text')}
+          </Button>
           <Button
-            type="text"
-            icon={<ImportOutlined />}
-            onClick={() => handleRestore(record.fileName)}
-            disabled={restoring || deleting}
-            title={t('settings.data.webdav.backup.manager.restore.tooltip')}
-          />
-          <Button
-            type="text"
+            type="link"
             danger
-            icon={<DeleteOutlined />}
             onClick={() => handleDeleteSingle(record.fileName)}
-            disabled={deleting || restoring}
-            title={t('settings.data.webdav.backup.manager.delete.tooltip')}
-          />
-        </Space>
+            disabled={deleting || restoring}>
+            {t('settings.data.webdav.backup.manager.delete.text')}
+          </Button>
+        </>
       )
     }
   ]
