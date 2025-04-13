@@ -28,9 +28,10 @@ interface WebdavBackupManagerProps {
     webdavPass?: string
     webdavPath?: string
   }
+  restoreMethod?: (fileName: string) => Promise<void>
 }
 
-export function WebdavBackupManager({ visible, onClose, webdavConfig }: WebdavBackupManagerProps) {
+export function WebdavBackupManager({ visible, onClose, webdavConfig, restoreMethod }: WebdavBackupManagerProps) {
   const { t } = useTranslation()
   const [backupFiles, setBackupFiles] = useState<BackupFile[]>([])
   const [loading, setLoading] = useState(false)
@@ -176,7 +177,7 @@ export function WebdavBackupManager({ visible, onClose, webdavConfig }: WebdavBa
       onOk: async () => {
         setRestoring(true)
         try {
-          await restoreFromWebdav(fileName)
+          await (restoreMethod || restoreFromWebdav)(fileName)
           message.success(t('settings.data.webdav.backup.manager.restore.success'))
           onClose() // 关闭模态框
         } catch (error: any) {
