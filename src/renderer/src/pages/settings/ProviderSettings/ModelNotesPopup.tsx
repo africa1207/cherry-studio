@@ -3,7 +3,7 @@ import { TopView } from '@renderer/components/TopView'
 import { useProvider } from '@renderer/hooks/useProvider'
 import { Provider } from '@renderer/types'
 import { Modal } from 'antd'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
